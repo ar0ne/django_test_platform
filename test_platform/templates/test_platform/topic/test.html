@@ -1,1 +1,21 @@
-This is test Topic page
+{% load staticfiles %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'test_platform/style.css' %}" />
+
+{% if error_message %}
+    <h2 class="error">{{ error_message }}</h2>
+{% endif %}
+
+{% if questions %}
+    <form action="{% url 'test_platform:test' subject_id %}" method="POST">
+        {% csrf_token %}
+        {% for question in questions %}
+            <p>{{ question.question_text }}</p>
+            {% for answer in question.answer_set.all %}
+                <input type="radio" name="questionId_{{ question.id }}" id="question[answer{{ forloop.counter }}]" value="{{ answer.id }}">
+                <label for="question[answer{{ forloop.counter }}]">{{ answer.answer_text }}</label><br/>
+            {% endfor %}
+        {% endfor %}
+        <input type="submit" value="Answer" />
+    </form>
+{% endif %}

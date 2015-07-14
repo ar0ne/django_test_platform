@@ -4,6 +4,10 @@
 
 <h1>This is Subject detail page</h1>
 
+{% if error_message %}
+    <h2 class="error">{{ error_message }}</h2>
+{% endif %}
+
 {% if subject %}
     <h3>{{ subject.subject_name }}</h3>
 
@@ -13,7 +17,7 @@
 
     {% for topic in subject.topic_set.all %}
         <p>{{ topic.topic_name }}</p>
-        <a href="{% url "test_platform:topic_test" subject.id topic.id %}">Test</a>
+            <a href="{% url "test_platform:topic_test" subject.id topic.id %}">Test</a>
     {% endfor %}
 
 {% endif %}

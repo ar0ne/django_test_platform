@@ -4,6 +4,10 @@
 
 <h1>This is Topic list page</h1>
 
+{% if error_message %}
+    <h2 class="error">{{ error_message }}</h2>
+{% endif %}
+
 {% if topic_list %}
     {% for topic in topic_list %}
         <h3>{{ topic.topic_name }}</h3>
