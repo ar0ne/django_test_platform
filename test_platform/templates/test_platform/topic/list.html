@@ -1,0 +1,12 @@
+{% load staticfiles %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'test_platform/style.css' %}" />
+
+<h1>This is Topic list page</h1>
+
+{% if topic_list %}
+    {% for topic in topic_list %}
+        <h3>{{ topic.topic_name }}</h3>
+        <a href="{% url 'test_platform:topic_test' topic.subject.id topic.id %}">Test</a>
+    {% endfor %}
+{% endif %}

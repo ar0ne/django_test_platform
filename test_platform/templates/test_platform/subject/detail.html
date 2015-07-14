@@ -1,0 +1,19 @@
+{% load staticfiles %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'test_platform/style.css' %}" />
+
+<h1>This is Subject detail page</h1>
+
+{% if subject %}
+    <h3>{{ subject.subject_name }}</h3>
+
+    <a href="{% url 'test_platform:subject_test' subject.id %}">Examine</a>
+
+    <a href="{% url 'test_platform:topic_list' subject.id %}">See all topics</a>
+
+    {% for topic in subject.topic_set.all %}
+        <p>{{ topic.topic_name }}</p>
+        <a href="{% url "test_platform:topic_test" subject.id topic.id %}">Test</a>
+    {% endfor %}
+
+{% endif %}

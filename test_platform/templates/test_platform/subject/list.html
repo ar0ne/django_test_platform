@@ -1,0 +1,12 @@
+{% load staticfiles %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'test_platform/style.css' %}" />
+
+<h1>This is Subject list page</h1>
+
+{% if subject_list %}
+    {% for subject in subject_list %}
+        <h3>{{ subject.subject_name }}</h3>
+        <a href="{% url 'test_platform:subject' subject.id %}">See</a>
+    {% endfor %}
+{% endif %}
