@@ -5,6 +5,14 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
+
+            <br/>
+            <ol class="breadcrumb">
+                <li><a href="{% url "test_platform:subject_list" %}">Subjects</a></li>
+                <li><a href="{% url "test_platform:subject" subject.id %}" >{{ subject.subject_name }}</a></li>
+                <li class="active">Test result</li>
+            </ol>
+
             {% if result_str %}
                 <h3 class="well">{{ result_str }}</h3>
             {% endif %}
@@ -42,8 +50,8 @@
                             {% endfor %}
                         </div>
                         {% if question.explanation %}
-                            <div class="panel-footer question-explanation">
-                                {{ question.explanation }}
+                            <div class="panel-footer">
+                                <strong>Explanation: </strong>{{ question.explanation }}
                             </div>
                         {% endif %}
 

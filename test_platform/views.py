@@ -48,7 +48,7 @@ def subject_test_view(request, subject_id):
 
     return render(request, 'test_platform/topic/test.html', {
         'questions': random_questions,
-        'subject_id': subject_id,
+        'subject': Subject.objects.get(pk=subject_id),
         'title': "Test"
     })
 
@@ -72,7 +72,7 @@ def topic_test_view(request, subject_id, topic_id):
 
     return render(request, 'test_platform/topic/test.html', {
         'questions': all_question_of_subject_and_topic,
-        'subject_id': subject_id,
+        'subject': Subject.objects.get(pk=subject_id),
         'title': "Test platform | Topic test"
     })
 
@@ -119,12 +119,14 @@ def test(request, subject_id):
 
             result['questions'].append(question)
 
-    result_str = "Your score is %s / %s" % (len(result['right_answers']), (len(result['questions'])))
+    result_str = "Your score is %s of %s" % (len(result['right_answers']), (len(result['questions'])))
 
+    # @TODO: Refactor to HttpResponseRedirect!!!
     return render_to_response('test_platform/topic/result.html', {
         'result_str': result_str,
         'result': result,
-        'title': "Test platform | Test"
+        'title': "Test platform | Test",
+        'subject': Subject.objects.get(pk=subject_id),
     })
 
 

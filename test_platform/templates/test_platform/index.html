@@ -1,9 +1,101 @@
-{% extends "test_platform/base/base.html" %}
+<!DOCTYPE html>
+<html lang="en">
 
-{% block header %}
+    {% include "test_platform/base/head.html" %}
 
-{% endblock %}
+    {% block custom_static_files %}
+        {% load staticfiles %}
+        <link href="{% static 'test_platform/css/font-awesome.min.css' %}" rel="stylesheet">
+        <link href="{% static 'test_platform/css/landing_style.css' %}" rel="stylesheet">
+    {% endblock %}
 
-{% block content %}
-    This is landing page
-{% endblock %}
+    <body>
+
+        {% block content %}
+
+            <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+                <div class="container">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <a class="navbar-brand" href="{% url 'test_platform:subject_list' %}">Let's go!</a>
+                    </div>
+                    <div class="navbar-collapse collapse">
+                        <ul class="nav navbar-nav navbar-right">
+                            <li class="active"><a href="{% url 'test_platform:index' %}">Home</a></li>
+                            <li><a href="#">About</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+
+            <div id="headerwrap">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-6 col-lg-offset-3">
+                            <h4>HELLO PEOPLE, THIS IS</h4>
+                            <h1>TEST PLATFORM</h1>
+                            <h4>AND HERE YOU CAN CHECK YOUR SKILLS</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="social">
+                <div class="container">
+                    <div class="row centered">
+                        <div class="col-lg-2">
+                            <a href="#"><i class="fa fa-dribbble"></i></a>
+                        </div>
+                        <div class="col-lg-2">
+                            <a href="#"><i class="fa fa-facebook"></i></a>
+                        </div>
+                        <div class="col-lg-2">
+                            <a href="#"><i class="fa fa-twitter"></i></a>
+                        </div>
+                        <div class="col-lg-2">
+                            <a href="#"><i class="fa fa-linkedin"></i></a>
+                        </div>
+                        <div class="col-lg-2">
+                            <a href="#"><i class="fa fa-instagram"></i></a>
+                        </div>
+                        <div class="col-lg-2">
+                            <a href="#"><i class="fa fa-tumblr"></i></a>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div id="footerwrap">
+                <div class="container">
+                    <div class="row centered">
+                        <div class="col-lg-4">
+                            <p><b>AWESOME! COOL! AMAZING!</b></p>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <p>Find new world.</p>
+                        </div>
+                        <div class="col-lg-4">
+                            <p>hello@test_platform.com</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        {% endblock %}
+
+
+        <script src="{% static 'test_platform/js/jquery.min.js' %}" ></script>
+        <script src="{% static 'test_platform/js/bootstrap.min.js' %}" ></script>
+
+    </body>
+
+
+</html>

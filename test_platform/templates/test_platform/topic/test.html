@@ -5,8 +5,15 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
+                <br/>
+                <ol class="breadcrumb">
+                    <li><a href="{% url "test_platform:subject_list" %}">Subjects</a></li>
+                    <li><a href="{% url "test_platform:subject" subject.id %}" >{{ subject.subject_name }}</a></li>
+                    <li class="active">Test</li>
+                </ol>
+
             {% if questions %}
-                <form action="{% url 'test_platform:test' subject_id %}" method="POST" id="test_form">
+                <form action="{% url 'test_platform:test' subject.id %}" method="POST" id="test_form">
                     {% csrf_token %}
                     {% for question in questions %}
                         <div class="panel panel-default">
