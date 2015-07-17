@@ -2,32 +2,58 @@
 
 {% block content %}
 
-    {% if result_str %}
-        {{ result_str }}
-    {% endif %}
-
-    {% if result %}
-        {% for question in result.questions %}
-            <p>{{ question.question_text }}</p>
-            <ul>
-            {% for answer in question.answer_set.all %}
-                {% if answer in result.right_answers %}
-                    <li style="background-color: aqua">{{ answer.answer_text }}</li>
-                {% elif answer in result.wrong_answers %}
-                    <li style="background-color: red">{{ answer.answer_text }}</li>
-                {% elif answer.is_right and answer not in result.right_answers %}
-                    <li style="background-color: yellow">{{ answer.answer_text }}</li>
-                {% else %}
-                    <li>{{ answer.answer_text }}</li>
-                {% endif %}
-            {% endfor %}
-            </ul>
-            {% if question.explanation %}
-                <div class="description">
-                    {{ question.explanation }}
-                </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+            {% if result_str %}
+                <h3 class="well">{{ result_str }}</h3>
             {% endif %}
-        {% endfor %}
-    {% endif %}
+
+            {% if result %}
+                {% for question in result.questions %}
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            {{ question.question_text }}
+                        </div>
+                        <div class="panel-body">
+                            {% for answer in question.answer_set.all %}
+                                {% if answer in result.right_answers %}
+                                    <p class="bg-info">
+                                        <input type="radio" name="questionId_{{ question.id }}" value="{{ answer.id }}" id="question[answer{{ forloop.counter }}]" disabled="disabled" checked>
+                                        <label for="question[answer{{ forloop.counter }}]">{{ answer.answer_text }}</label>
+                                    </p>
+                                {% elif answer in result.wrong_answers %}
+                                    <p class="bg-danger">
+                                        <input type="radio" name="questionId_{{ question.id }}" value="{{ answer.id }}" id="question[answer{{ forloop.counter }}]" disabled="disabled" checked>
+                                        <label for="question[answer{{ forloop.counter }}]">{{ answer.answer_text }}</label>
+                                    </p>
+                                {% elif answer.is_right and answer not in result.right_answers %}
+                                    <p class="bg-success">
+                                        <input type="radio" name="questionId_{{ question.id }}" value="{{ answer.id }}" id="question[answer{{ forloop.counter }}]" disabled="disabled">
+                                        <label for="question[answer{{ forloop.counter }}]" >{{ answer.answer_text }}</label>
+                                    </p>
+                                {% else %}
+                                    <p>
+                                        <input type="radio" name="questionId_{{ question.id }}" value="{{ answer.id }}" id="question[answer{{ forloop.counter }}]" disabled="disabled">
+                                        <label for="question[answer{{ forloop.counter }}]">{{ answer.answer_text }}</label>
+                                    </p>
+                                {% endif %}
+
+                            {% endfor %}
+                        </div>
+                        {% if question.explanation %}
+                            <div class="panel-footer question-explanation">
+                                {{ question.explanation }}
+                            </div>
+                        {% endif %}
+
+                    </div>
+                {% endfor %}
+
+
+            {% endif %}
+            </div>
+        </div>
+    </div>
 
 {% endblock %}

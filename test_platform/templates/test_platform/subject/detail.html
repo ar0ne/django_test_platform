@@ -2,20 +2,48 @@
 
 {% block content %}
 
-    <h1>This is Subject detail page</h1>
+    <div class="bs-docs-header" tabindex="-1">
+        <div class="container">
+            <h1>{{ subject.subject_name }}</h1>
+            {% if subject.description %}
+            <p>{{ subject.description }}</p>
+            {% endif %}
+        </div>
+    </div>
 
-    {% if subject %}
-        <h3>{{ subject.subject_name }}</h3>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+            <ol class="breadcrumb">
+                <li><a href="{% url "test_platform:subject_list" %}">Subjects</a></li>
+                <li class="active">{{ subject.subject_name }}</li>
+            </ol>
+            {% if subject %}
+                <p><a class="btn btn-primary" href="{% url 'test_platform:subject_test' subject.id %}">Subject Test</a></p>
 
-        <a href="{% url 'test_platform:subject_test' subject.id %}">Examine</a>
-
-        <a href="{% url 'test_platform:topic_list' subject.id %}">See all topics</a>
-
-        {% for topic in subject.topic_set.all %}
-            <p>{{ topic.topic_name }}</p>
-                <a href="{% url "test_platform:topic_test" subject.id topic.id %}">Test</a>
-        {% endfor %}
-
-    {% endif %}
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3>All topics for {{ subject.subject_name }}</h3>
+                            </div>
+                            {% for topic in subject.topic_set.all %}
+                                 <ul class="list-group">
+                                     <li class="list-group-item">
+                                         <a class="btn btn-default" href="{% url "test_platform:topic_test" subject.id topic.id %}">Test</a>
+                                         <strong>{{ topic.topic_name }}</strong>
+                                         {% if topic.description %}
+                                            <p><small>{{ topic.description }}</small></p>
+                                         {% endif %}
+                                     </li>
+                                 </ul>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            </div>
+        </div>
+    </div>
 
 {% endblock %}

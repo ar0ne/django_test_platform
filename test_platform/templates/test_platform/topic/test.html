@@ -2,18 +2,30 @@
 
 {% block content %}
 
-    {% if questions %}
-        <form action="{% url 'test_platform:test' subject_id %}" method="POST">
-            {% csrf_token %}
-            {% for question in questions %}
-                <p>{{ question.question_text }}</p>
-                {% for answer in question.answer_set.all %}
-                    <input type="radio" name="questionId_{{ question.id }}" id="question[answer{{ forloop.counter }}]" value="{{ answer.id }}">
-                    <label for="question[answer{{ forloop.counter }}]">{{ answer.answer_text }}</label><br/>
-                {% endfor %}
-            {% endfor %}
-            <input type="submit" value="Answer" />
-        </form>
-    {% endif %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+            {% if questions %}
+                <form action="{% url 'test_platform:test' subject_id %}" method="POST" id="test_form">
+                    {% csrf_token %}
+                    {% for question in questions %}
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                {{ question.question_text }}
+                            </div>
+                            <div class="panel-body">
+                                {% for answer in question.answer_set.all %}
+                                    <input type="radio" name="questionId_{{ question.id }}" id="question[answer{{ forloop.counter }}]" value="{{ answer.id }}">
+                                    <label for="question[answer{{ forloop.counter }}]">{{ answer.answer_text }}</label><br/>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                    <input class="btn btn-success" type="submit" value="Answer" />
+                </form>
+            {% endif %}
+            </div>
+        </div>
+    </div>
 
 {% endblock %}

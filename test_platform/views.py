@@ -13,6 +13,11 @@ class SubjectListView(generic.ListView):
     template_name = "test_platform/subject/list.html"
     context_object_name = "subject_list"
 
+    def get_context_data(self, **kwargs):
+        context = super(SubjectListView, self).get_context_data(**kwargs)
+        context['title'] = 'Test platform | Subjects'
+        return context
+
     def get_queryset(self):
         return Subject.objects.all()
 
@@ -20,15 +25,11 @@ class SubjectView(generic.DetailView):
     template_name = "test_platform/subject/detail.html"
     model = Subject
 
-class TopicListView(generic.ListView):
-    template_name = "test_platform/topic/list.html"
-    model = Topic
-    context_object_name = "topic_list"
+    def get_context_data(self, **kwargs):
+        context = super(SubjectView, self).get_context_data(**kwargs)
+        context['title'] = 'Test platform | Subject detail'
+        return context
 
-    def get_queryset(self):
-        return Topic.objects.filter(
-            subject_id=self.kwargs['pk'],
-        )
 
 def subject_test_view(request, subject_id):
 
@@ -39,7 +40,8 @@ def subject_test_view(request, subject_id):
     if all_question_of_subject.count() < 20:
         return render(request, "test_platform/subject/detail.html", {
             'subject': Subject.objects.get(pk=subject_id),
-            'error_message': "Sorry, but database doesn't have enought question for this subject!"
+            'error_message': "Sorry, but database doesn't have enought question for this subject!",
+            'title': "Test platform | Subject detail"
         })
 
     random_questions = all_question_of_subject.order_by('?')[:20]
@@ -47,6 +49,7 @@ def subject_test_view(request, subject_id):
     return render(request, 'test_platform/topic/test.html', {
         'questions': random_questions,
         'subject_id': subject_id,
+        'title': "Test"
     })
 
 def topic_test_view(request, subject_id, topic_id):
@@ -57,11 +60,10 @@ def topic_test_view(request, subject_id, topic_id):
     )
 
     if all_question_of_subject_and_topic.count() <= 0:
-        return render(request, 'test_platform/topic/list.html', {
-            'error_message': "Sorry, but database doesn't have enought questions for this topics",
-            'topic_list': Topic.objects.filter(
-                subject_id=subject_id,
-            )
+        return render(request, 'test_platform/subject/detail.html', {
+            'error_message': "Sorry, but database doesn't have enought questions for this topic",
+            'subject': Subject.objects.get(pk=subject_id),
+            'title': "Test platform | Subject",
         })
 
     """ not more than 20 questions """
@@ -71,6 +73,7 @@ def topic_test_view(request, subject_id, topic_id):
     return render(request, 'test_platform/topic/test.html', {
         'questions': all_question_of_subject_and_topic,
         'subject_id': subject_id,
+        'title': "Test platform | Topic test"
     })
 
 def test(request, subject_id):
@@ -95,7 +98,8 @@ def test(request, subject_id):
             except(KeyError, Question.DoesNotExist):
                 return render(request, 'test_platform/subject',{
                     'error_message': "Not allowed question in test!",
-                    'subject_id': subject_id
+                    'subject_id': subject_id,
+                    'title': 'Test platform | Subjects',
                 })
 
             try:
@@ -103,7 +107,8 @@ def test(request, subject_id):
             except:
                 return render(request, 'test_platform/subject',{
                     'error_message': "Couldn't find answer or more then one answer for question!",
-                    'subject_id': subject_id
+                    'subject_id': subject_id,
+                    'title': 'Test platform | Subjects',
                 })
 
             if answer.id == int(user_answer_id):
@@ -118,7 +123,8 @@ def test(request, subject_id):
 
     return render_to_response('test_platform/topic/result.html', {
         'result_str': result_str,
-        'result': result
+        'result': result,
+        'title': "Test platform | Test"
     })
 
 

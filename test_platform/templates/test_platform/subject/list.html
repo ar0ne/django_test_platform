@@ -2,13 +2,63 @@
 
 {% block content %}
 
-    <h1>This is Subject list page</h1>
+    <div class="bs-docs-header" tabindex="-1">
+        <div class="container">
+            <h1>Subjects</h1>
+            <p>List of all allowed subjects.</p>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                {% if subject_list %}
+                    <div class="row">
+                    {% for subject in subject_list %}
+                        <div class="col-md-6">
+                            <div class="panel panel-default" id="subject_block_{{ forloop.counter }}">
+                                <div class="panel-heading">
+                                    <a href="{% url 'test_platform:subject' subject.id %}"><h3>{{ subject.subject_name }}</h3></a>
+                                    <small>
+                                        {% if subject.description %}
+                                            {{ subject.description }}
+                                        {% endif %}
+                                    </small>
+                                </div>
+                                <div class="panel panel-body">
+                                    {% if subject.topic_set.all %}
+                                        <strong>Allowed topics</strong>
+                                        <ul class="list-group">
+                                        {% for topic in subject.topic_set.all %}
+                                            <li class="list-group-item">{{ topic.topic_name }}</li>
+{#                                            <a href="{% url 'test_platform:topic_list' subject.id %}" class="list-group-item">{{ topic.topic_name }}</a>#}
+                                        {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                </div>
+                            </div>
+                       </div>
+                    {% endfor %}
+                     </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 
-    {% if subject_list %}
-        {% for subject in subject_list %}
-            <h3>{{ subject.subject_name }}</h3>
-            <a href="{% url 'test_platform:subject' subject.id %}">See</a>
-        {% endfor %}
-    {% endif %}
+    <script language="javascript">
+        $(document).ready(function(){
+            var blocks = $("[id^='subject_block_']");
+            var max_height = 0;
+            $.each(blocks, function(){
+                if ($(this).outerHeight(true) > max_height) {
+                    max_height = $(this).outerHeight(true);
+                }
+            });
+            console.log(max_height);
+            $.each(blocks, function(){
+                $(this).css("height", max_height);
+            });
+        });
+    </script>
+
 
 {% endblock %}

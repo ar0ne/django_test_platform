@@ -1,10 +1,20 @@
 {% block head %}
 
-    {% load staticfiles %}
+    <head>
+        {% load staticfiles %}
 
-    <link rel="stylesheet" type="text/css" href="{% static 'test_platform/css/style.css' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'test_platform/css/bootstrap.min.css' %}" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <script type="javascript" src="{% static 'test_platform/js/jquery.min.js' %}" ></script>
+        <script src="{% static 'test_platform/js/jquery.min.js' %}" ></script>
+        <script src="{% static 'test_platform/js/bootstrap.min.js' %}" ></script>
+
+        <link rel="stylesheet" type="text/css" href="{% static 'test_platform/css/bootstrap.min.css' %}" />
+        <link rel="stylesheet" type="text/css" href="{% static 'test_platform/css/style.css' %}" />
+
+        <title>{{ title|default:"Test platform" }}</title>
+
+    </head>
 
 {% endblock %}

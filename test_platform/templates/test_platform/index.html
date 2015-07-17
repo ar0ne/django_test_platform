@@ -1,5 +1,9 @@
-{% load staticfiles %}
+{% extends "test_platform/base/base.html" %}
 
-<link rel="stylesheet" type="text/css" href="{% static 'test_platform/css/style.css' %}" />
+{% block header %}
 
-<h1>This is landing page</h1>
+{% endblock %}
+
+{% block content %}
+    This is landing page
+{% endblock %}
