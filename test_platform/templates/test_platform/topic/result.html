@@ -1,5 +1,33 @@
-This is your topic result
+{% extends "test_platform/base/base.html" %}
 
-{% if result %}
-    {{ result }}
-{% endif %}
+{% block content %}
+
+    {% if result_str %}
+        {{ result_str }}
+    {% endif %}
+
+    {% if result %}
+        {% for question in result.questions %}
+            <p>{{ question.question_text }}</p>
+            <ul>
+            {% for answer in question.answer_set.all %}
+                {% if answer in result.right_answers %}
+                    <li style="background-color: aqua">{{ answer.answer_text }}</li>
+                {% elif answer in result.wrong_answers %}
+                    <li style="background-color: red">{{ answer.answer_text }}</li>
+                {% elif answer.is_right and answer not in result.right_answers %}
+                    <li style="background-color: yellow">{{ answer.answer_text }}</li>
+                {% else %}
+                    <li>{{ answer.answer_text }}</li>
+                {% endif %}
+            {% endfor %}
+            </ul>
+            {% if question.explanation %}
+                <div class="description">
+                    {{ question.explanation }}
+                </div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+
+{% endblock %}

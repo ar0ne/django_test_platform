@@ -1,12 +1,14 @@
-{% load staticfiles %}
+{% extends "test_platform/base/base.html" %}
 
-<link rel="stylesheet" type="text/css" href="{% static 'test_platform/style.css' %}" />
+{% block content %}
 
-<h1>This is Subject list page</h1>
+    <h1>This is Subject list page</h1>
 
-{% if subject_list %}
-    {% for subject in subject_list %}
-        <h3>{{ subject.subject_name }}</h3>
-        <a href="{% url 'test_platform:subject' subject.id %}">See</a>
-    {% endfor %}
-{% endif %}
+    {% if subject_list %}
+        {% for subject in subject_list %}
+            <h3>{{ subject.subject_name }}</h3>
+            <a href="{% url 'test_platform:subject' subject.id %}">See</a>
+        {% endfor %}
+    {% endif %}
+
+{% endblock %}

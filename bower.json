@@ -1,0 +1,19 @@
+{
+  "name": "django_test_platform",
+  "version": "0.0.1",
+  "homepage": "https://github.com/ar0ne/django_test_platform",
+  "description": "Test platform",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.4",
+    "bootstrap": "~3.3.5"
+  }
+}

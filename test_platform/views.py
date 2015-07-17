@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views import generic
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
@@ -74,32 +74,52 @@ def topic_test_view(request, subject_id, topic_id):
     })
 
 def test(request, subject_id):
-    count = 0
-    for post_q in request.POST:
-        if post_q.split("_")[0] != 'questionId':
-            continue
-        else:
+
+    if not request.POST:
+        return redirect('/subject', subject_id=subject_id )
+
+    # ex: { question_id: answer_id }
+    # One question - one answer
+    user_post_data = [ { question_id.split('_')[1]: request.POST[question_id]} for question_id in request.POST if question_id.split('_')[0] == 'questionId']
+
+    result = {
+        'questions': [],
+        'wrong_answers': [],
+        'right_answers': []
+    }
+
+    for user_question_and_answer in user_post_data:
+        for user_question_id, user_answer_id in user_question_and_answer.items():
             try:
-                question = Question.objects.get(pk=post_q.split("_")[1])
+                question = Question.objects.get(pk=user_question_id)
             except(KeyError, Question.DoesNotExist):
                 return render(request, 'test_platform/subject',{
-                    'error_message': "Not allowed answer in test!",
+                    'error_message': "Not allowed question in test!",
                     'subject_id': subject_id
                 })
+
+            try:
+                answer = question.answer_set.filter(is_right=True)[0]
+            except:
+                return render(request, 'test_platform/subject',{
+                    'error_message': "Couldn't find answer or more then one answer for question!",
+                    'subject_id': subject_id
+                })
+
+            if answer.id == int(user_answer_id):
+                result['right_answers'].append(answer)
             else:
-                for answer in question.answer_set.filter(is_right=True):
-                    if answer.id == int(request.POST[post_q]):
-                        count += 1
+                result['wrong_answers'].append(Answer.objects.get(pk=user_answer_id))
+                pass
 
-    result = "Your score is %s / %s" % (count, (len(request.POST) - 1))
+            result['questions'].append(question)
 
- #   return HttpResponseRedirect(reverse("test_platform:result", args=(subject_id,)))
+    result_str = "Your score is %s / %s" % (len(result['right_answers']), (len(result['questions'])))
+
     return render_to_response('test_platform/topic/result.html', {
-        'result': result,
+        'result_str': result_str,
+        'result': result
     })
 
-def result_view(request, subject_id,result):
-    return render(request, 'test_platform/topic/result.html', {
-        'subject_id': subject_id,
-        'result': result,
-    })
+
+
