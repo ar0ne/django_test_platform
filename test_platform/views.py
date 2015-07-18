@@ -5,7 +5,7 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import render_to_response
 from .models import *
 
-# landing page?
+
 def index(request):
     return render(request, 'test_platform/index.html')
 
@@ -21,12 +21,13 @@ class SubjectListView(generic.ListView):
     def get_queryset(self):
         return Subject.objects.all()
 
-class SubjectView(generic.DetailView):
+class SubjectDetailView(generic.DetailView):
     template_name = "test_platform/subject/detail.html"
     model = Subject
+    context_object_name = 'subject'
 
     def get_context_data(self, **kwargs):
-        context = super(SubjectView, self).get_context_data(**kwargs)
+        context = super(SubjectDetailView, self).get_context_data(**kwargs)
         context['title'] = 'Test platform | Subject detail'
         return context
 
@@ -40,7 +41,7 @@ def subject_test_view(request, subject_id):
     if all_question_of_subject.count() < 20:
         return render(request, "test_platform/subject/detail.html", {
             'subject': Subject.objects.get(pk=subject_id),
-            'error_message': "Sorry, but database doesn't have enought question for this subject!",
+            'error_message': "Sorry, but database doesn't have enough question for this subject!",
             'title': "Test platform | Subject detail"
         })
 
@@ -61,7 +62,7 @@ def topic_test_view(request, subject_id, topic_id):
 
     if all_question_of_subject_and_topic.count() <= 0:
         return render(request, 'test_platform/subject/detail.html', {
-            'error_message': "Sorry, but database doesn't have enought questions for this topic",
+            'error_message': "Sorry, but database doesn't have enough questions for this topic",
             'subject': Subject.objects.get(pk=subject_id),
             'title': "Test platform | Subject",
         })
@@ -83,7 +84,7 @@ def test(request, subject_id):
 
     # ex: { question_id: answer_id }
     # One question - one answer
-    user_post_data = [ { question_id.split('_')[1]: request.POST[question_id]} for question_id in request.POST if question_id.split('_')[0] == 'questionId']
+    user_post_data = [{question_id.split('_')[1]: request.POST[question_id]} for question_id in request.POST if question_id.split('_')[0] == 'questionId']
 
     result = {
         'questions': [],
@@ -96,7 +97,7 @@ def test(request, subject_id):
             try:
                 question = Question.objects.get(pk=user_question_id)
             except(KeyError, Question.DoesNotExist):
-                return render(request, 'test_platform/subject',{
+                return render(request, 'test_platform/subject/detail.html', {
                     'error_message': "Not allowed question in test!",
                     'subject_id': subject_id,
                     'title': 'Test platform | Subjects',
@@ -105,7 +106,7 @@ def test(request, subject_id):
             try:
                 answer = question.answer_set.filter(is_right=True)[0]
             except:
-                return render(request, 'test_platform/subject',{
+                return render(request, 'test_platform/subject/detail.html', {
                     'error_message': "Couldn't find answer or more then one answer for question!",
                     'subject_id': subject_id,
                     'title': 'Test platform | Subjects',

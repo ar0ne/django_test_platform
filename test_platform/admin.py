@@ -26,7 +26,7 @@ class QuestionAdmin(admin.ModelAdmin):
     more here:
     http://stackoverflow.com/questions/163823/can-list-display-in-a-django-modeladmin-display-attributes-of-foreignkey-field
     """
-    list_display = ('question_text', 'subject', 'topic', 'explanation', )
+    list_display = ('question_text', 'subject', 'topic', 'explanation' )
     inlines = [AnswerInline]
     list_filter = ['subject', 'topic']
 

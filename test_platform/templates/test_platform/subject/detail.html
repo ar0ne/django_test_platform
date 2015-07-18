@@ -18,9 +18,10 @@
                 <li><a href="{% url "test_platform:subject_list" %}">Subjects</a></li>
                 <li class="active">{{ subject.subject_name }}</li>
             </ol>
-            {% if subject %}
+            {% if subject.question_set.all %}
                 <p><a class="btn btn-primary" href="{% url 'test_platform:subject_test' subject.id %}">Subject Test</a></p>
-
+            {% endif %}
+            {% if subject.topic_set.all %}
                 <div class="row">
                     <div class="col-md-12">
                         <div class="panel panel-default">
@@ -41,6 +42,8 @@
                         </div>
                     </div>
                 </div>
+            {% else %}
+                <p class="well">No topics are available.</p>
             {% endif %}
             </div>
         </div>
