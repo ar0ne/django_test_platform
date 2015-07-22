@@ -14,6 +14,7 @@ urlpatterns = [
     # ex: /subject/2/topic/3/test/
     url(r'^subject/(?P<subject_id>[0-9]+)/topic/(?P<topic_id>[0-9]+)/test/$', views.topic_test_view, name='topic_test'),
     # ex: /subject/2/topic/3/test/act/
-    url(r'^subject/(?P<subject_id>[0-9]+)/test/result/$', views.test, name='test'),
+    url(r'^subject/(?P<subject_id>[0-9]+)/test/do/$', views.test, name='test'),
 
+    url(r'^subject/(?P<subject_id>[0-9]+)/result/$', views.result, name='result'),
 ]

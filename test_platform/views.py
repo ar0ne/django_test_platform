@@ -3,6 +3,7 @@ from django.views import generic
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.shortcuts import render_to_response
+from django.template import RequestContext
 from .models import *
 
 
@@ -47,7 +48,7 @@ def subject_test_view(request, subject_id):
 
     random_questions = all_question_of_subject.order_by('?')[:20]
 
-    return render(request, 'test_platform/topic/test.html', {
+    return render(request, 'test_platform/subject/test.html', {
         'questions': random_questions,
         'subject': Subject.objects.get(pk=subject_id),
         'title': "Test"
@@ -71,7 +72,7 @@ def topic_test_view(request, subject_id, topic_id):
     if all_question_of_subject_and_topic.count() > 20:
         all_question_of_subject_and_topic = all_question_of_subject_and_topic.order_by('?')[:20]
 
-    return render(request, 'test_platform/topic/test.html', {
+    return render(request, 'test_platform/subject/test.html', {
         'questions': all_question_of_subject_and_topic,
         'subject': Subject.objects.get(pk=subject_id),
         'title': "Test platform | Topic test"
@@ -99,36 +100,63 @@ def test(request, subject_id):
             except(KeyError, Question.DoesNotExist):
                 return render(request, 'test_platform/subject/detail.html', {
                     'error_message': "Not allowed question in test!",
-                    'subject_id': subject_id,
+                    'subject': Subject.objects.get(pk=subject_id),
                     'title': 'Test platform | Subjects',
                 })
 
             try:
-                answer = question.answer_set.filter(is_right=True)[0]
+                answer = question.answer_set.filter(is_right=True).first()
             except:
                 return render(request, 'test_platform/subject/detail.html', {
                     'error_message': "Couldn't find answer or more then one answer for question!",
-                    'subject_id': subject_id,
+                    'subject': Subject.objects.get(pk=subject_id),
                     'title': 'Test platform | Subjects',
                 })
 
             if answer.id == int(user_answer_id):
-                result['right_answers'].append(answer)
+                result['right_answers'].append(answer.id)
             else:
-                result['wrong_answers'].append(Answer.objects.get(pk=user_answer_id))
+                result['wrong_answers'].append(Answer.objects.get(pk=user_answer_id).id)
                 pass
 
-            result['questions'].append(question)
+            result['questions'].append(question.id)
 
     result_str = "Your score is %s of %s" % (len(result['right_answers']), (len(result['questions'])))
 
-    # @TODO: Refactor to HttpResponseRedirect!!!
-    return render_to_response('test_platform/topic/result.html', {
+    request.session['test_data'] = {
         'result_str': result_str,
         'result': result,
         'title': "Test platform | Test",
+    }
+
+    return HttpResponseRedirect(reverse('test_platform:result', args=(subject_id,)))
+
+
+def result(request, subject_id):
+
+    post_data = request.session.get('test_data')
+
+    if not post_data:
+        return render(request, 'test_platform/subject/detail.html', {
+            'error_message': "Some problems with input data!",
+            'subject': Subject.objects.get(pk=subject_id),
+            'title': 'Test platform | Subjects',
+        })
+
+    del request.session['test_data']
+    request.session.modified = True
+
+    results = {
+        'questions':   [Question.objects.get(pk=q_id) for q_id in post_data['result']['questions']],
+        'right_answers': [Answer.objects.get(pk=a_id) for a_id in post_data['result']['right_answers']],
+        'wrong_answers': [Answer.objects.get(pk=a_id) for a_id in post_data['result']['wrong_answers']],
+    }
+
+    return render(request, 'test_platform/subject/result.html', {
+        'result_str': post_data['result_str'],
+        'result': results,
+        'title': post_data['title'],
         'subject': Subject.objects.get(pk=subject_id),
     })
-
 
 

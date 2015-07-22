@@ -28,10 +28,12 @@
                                     {% if subject.topic_set.all %}
                                         <strong>Available topics</strong>
                                         <ul class="list-group">
-                                        {% for topic in subject.topic_set.all %}
+                                        {% for topic in subject.topic_set.all|slice:":5" %}
                                             <li class="list-group-item">{{ topic.topic_name }}</li>
-{#                                            <a href="{% url 'test_platform:topic_list' subject.id %}" class="list-group-item">{{ topic.topic_name }}</a>#}
                                         {% endfor %}
+                                            {% if subject.topic_set.all.count > 5 %}
+                                                <li class="list-group-item">...</li>
+                                            {% endif %}
                                         </ul>
                                     {% endif %}
                                 </div>
@@ -55,7 +57,6 @@
                     max_height = $(this).outerHeight(true);
                 }
             });
-            console.log(max_height);
             $.each(blocks, function(){
                 $(this).css("height", max_height);
             });
